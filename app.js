@@ -25,6 +25,7 @@ async function importProgress(file){
   }catch(error){showDataMessage('无法导入：请选择由荷写导出的有效 JSON 文件。',true)}
 }
 function normalize(s) { return s.toLowerCase().trim().replace(/[.,!?;:'’]/g, '').replace(/\s+/g, ' '); }
+function topicColor(topic){let hash=0;for(const char of topic)hash=(hash+char.charCodeAt(0))%6;return `topic-${hash}`}
 function distance(a, b) {
   const m = Array.from({length:a.length+1},(_,i)=>[i]);
   for(let j=1;j<=b.length;j++)m[0][j]=j;
@@ -74,7 +75,7 @@ function loadNext() {
   answered=false; current=queue[sessionDone % queue.length];
   $('#chinesePrompt').textContent=current.zh;
   $('#questionNo').textContent=`第 ${sessionDone+1} 题`;
-  $('#questionTags').innerHTML=`<span class="tag">${current.level}</span><span class="tag">${current.topic}</span>`;
+  $('#questionTags').innerHTML=`<span class="tag level-tag level-${current.level.toLowerCase()}">${current.level}</span><span class="tag topic-tag ${topicColor(current.topic)}">${current.topic}</span>`;
   $('#answerInput').value=''; $('#answerInput').disabled=false; $('#feedback').hidden=true;
   $('#orderingAnswer').classList.remove('locked'); prepareWords();
   $('#submitBtn').hidden=false; $('#submitBtn').disabled=answerMode==='ordering'; $('#nextBtn').hidden=true; $('#skipBtn').hidden=false;
@@ -114,7 +115,7 @@ function renderLibrary(){
   const list=SENTENCES.filter(s=>(level==='all'||s.level===level)&&(topic==='all'||s.topic===topic)&&(!q||s.zh.includes(q)||s.nl.toLowerCase().includes(q)));
   $('#libraryStats').textContent=`显示 ${list.length} / ${SENTENCES.length} 句`;
   $('#libraryTotal').textContent=SENTENCES.length;
-  $('#sentenceList').innerHTML=list.length?list.map(s=>`<article class="sentence-item"><div class="level">${s.level}</div><div><p>${s.zh}</p><small>${s.nl}</small></div><div class="tags"><span class="tag">${s.topic}</span><span class="tag">${s.source}</span></div></article>`).join(''):'<article class="sentence-item"><div></div><div><p>还没有符合条件的句子</p><small>请在 my-sentences.js 中加入内容。</small></div></article>';
+  $('#sentenceList').innerHTML=list.length?list.map(s=>`<article class="sentence-item"><div class="level">${s.level}</div><div><p>${s.zh}</p><small>${s.nl}</small></div><div class="tags"><span class="tag topic-tag ${topicColor(s.topic)}">${s.topic}</span><span class="tag source-tag">${s.source}</span></div></article>`).join(''):'<article class="sentence-item"><div></div><div><p>还没有符合条件的句子</p><small>请在 my-sentences.js 中加入内容。</small></div></article>';
 }
 function renderReport(){
   const ps=SENTENCES.map(s=>state.sentences[s.id]).filter(Boolean),answers=ps.reduce((a,p)=>a+p.attempts,0),correct=ps.reduce((a,p)=>a+p.correct,0);
