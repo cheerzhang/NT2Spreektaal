@@ -89,11 +89,20 @@
         <article class="panel"><h2>最近 7 天</h2><div id="weekChart" class="week-chart"></div></article>
       </div>
       <article class="panel topics-panel"><h2>话题掌握情况</h2><div id="topicReport"></div></article>
+      <article class="panel data-panel">
+        <div><h2>学习数据</h2><p>进度保存在当前浏览器中。部署新版本不会清空；你也可以导出备份，或导入到其他设备。</p></div>
+        <div class="data-actions">
+          <button id="exportProgressBtn" class="btn ghost">↓ 导出进度</button>
+          <button id="importProgressBtn" class="btn primary">↑ 导入进度</button>
+          <input id="progressFileInput" type="file" accept="application/json,.json" hidden>
+        </div>
+        <p id="dataMessage" class="data-message" aria-live="polite"></p>
+      </article>
     </section>
   </main>
   <footer>荷写 · 每天十句，慢慢把荷兰语写进生活里。</footer>
   <script src="my-sentences.js?v=20260720-2"></script>
   <script src="sentences.js?v=20260720-2"></script>
-  <script src="app.js?v=20260720-3"></script>
+  <script src="app.js?v=20260720-4"></script>
 </body>
 </html>

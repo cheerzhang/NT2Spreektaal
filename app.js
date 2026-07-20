@@ -8,6 +8,22 @@ const today = () => new Date().toISOString().slice(0, 10);
 const dayMs = 86400000;
 
 function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function showDataMessage(message,isError=false){const el=$('#dataMessage');el.textContent=message;el.classList.toggle('error',isError)}
+function exportProgress(){
+  const backup={app:'荷写',version:1,exportedAt:new Date().toISOString(),progress:state};
+  const blob=new Blob([JSON.stringify(backup,null,2)],{type:'application/json'}),url=URL.createObjectURL(blob),link=document.createElement('a');
+  link.href=url;link.download=`hexie-progress-${today()}.json`;document.body.appendChild(link);link.click();link.remove();URL.revokeObjectURL(url);
+  showDataMessage('进度已导出。请把这个 JSON 文件保存在安全的位置。');
+}
+async function importProgress(file){
+  try{
+    const parsed=JSON.parse(await file.text()),incoming=parsed.progress||parsed;
+    if(!incoming||typeof incoming!=='object'||typeof incoming.sentences!=='object'||typeof incoming.days!=='object')throw new Error('invalid');
+    state.sentences=incoming.sentences;state.days=incoming.days;state.settings=incoming.settings||state.settings||{};save();
+    answerMode=state.settings.answerMode||answerMode;setAnswerMode(answerMode);updateCounts();buildQueue();renderReport();
+    showDataMessage(`导入成功：恢复了 ${Object.keys(state.sentences).length} 条句子的学习记录。`);
+  }catch(error){showDataMessage('无法导入：请选择由荷写导出的有效 JSON 文件。',true)}
+}
 function normalize(s) { return s.toLowerCase().trim().replace(/[.,!?;:'’]/g, '').replace(/\s+/g, ' '); }
 function distance(a, b) {
   const m = Array.from({length:a.length+1},(_,i)=>[i]);
@@ -114,6 +130,9 @@ $$('.nav-link').forEach(b=>b.onclick=()=>{$$('.nav-link,.page').forEach(x=>x.cla
 $$('.level-tabs button').forEach(b=>b.onclick=()=>{$$('.level-tabs button').forEach(x=>x.classList.remove('active'));b.classList.add('active');mode=b.dataset.level;buildQueue()});
 $('#submitBtn').onclick=submit; $('#nextBtn').onclick=next; $('#skipBtn').onclick=next;
 $('#clearOrderBtn').onclick=()=>{if(!answered){selectedTokenIds=[];renderWords()}};
+$('#exportProgressBtn').onclick=exportProgress;
+$('#importProgressBtn').onclick=()=>$('#progressFileInput').click();
+$('#progressFileInput').onchange=event=>{const file=event.target.files[0];if(file)importProgress(file);event.target.value=''};
 $$('.answer-mode button').forEach(button=>button.onclick=()=>setAnswerMode(button.dataset.answerMode));
 $('#answerInput').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();answered?next():submit()}});
 ['levelFilter','topicFilter','searchInput'].forEach(id=>$('#'+id).addEventListener('input',renderLibrary));
