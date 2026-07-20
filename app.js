@@ -86,7 +86,8 @@ function submit() {
   if(answered || !rawAnswer.trim() || (answerMode==='ordering'&&selectedTokenIds.length!==wordTokens.length)) return;
   const given=normalize(rawAnswer), expected=normalize(current.nl);
   const similarity=1-distance(given,expected)/Math.max(given.length,expected.length);
-  const correct=answerMode==='ordering'?given===expected:similarity>=.92; answered=true;
+  // 两种模式都严格核对拼写与词序；normalize 仅忽略大小写、标点和多余空格。
+  const correct=given===expected; answered=true;
   const p=sentenceProgress(current.id); p.attempts++; if(correct)p.correct++;
   p.mastery=Math.max(0,Math.min(100,p.mastery+(correct?20:-12)));
   const intervals=[1,2,4,7,14,30]; const interval=correct?intervals[Math.min(Math.floor(p.mastery/20),5)]:1;
