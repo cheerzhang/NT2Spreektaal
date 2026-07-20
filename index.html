@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f3ea">
+  <title>荷写 · Nederlands dictee</title>
+  <link rel="stylesheet" href="styles.css?v=20260720-2">
+  <link rel="stylesheet" href="theme.css?v=20260720-2">
+  <link rel="stylesheet" href="ordering.css?v=20260720-3">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#practice" aria-label="荷写首页"><span>荷写</span><small>Nederlands dictee</small></a>
+    <nav aria-label="主导航">
+      <button class="nav-link active" data-page="practice">练习</button>
+      <button class="nav-link" data-page="library">句库</button>
+      <button class="nav-link" data-page="report">学习报告</button>
+    </nav>
+  </header>
+
+  <main>
+    <section id="practice" class="page active">
+      <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+      <div class="practice-head">
+        <div><p class="eyebrow">DAILY DUTCH · 今日训练</p><h1>今天，也让荷兰语<br><em>向前一点。</em></h1></div>
+        <div class="motivation-board">
+          <div class="goal-ring" id="goalRing"><span><b id="todayAnswers">0</b><small>/ 10</small></span></div>
+          <div><p>每日目标</p><strong><i>🔥</i> <span id="streakCount">0</span> 天连续学习</strong><small id="goalMessage">完成今天的十句吧</small></div>
+        </div>
+      </div>
+      <div class="level-tabs" role="group" aria-label="选择难度">
+        <button data-level="review" class="active">今日复习 <b id="reviewCount">0</b></button>
+        <button data-level="A2">A2 <b id="a2Count">0</b></button><button data-level="B1">B1 <b id="b1Count">0</b></button><button data-level="B2">B2 <b id="b2Count">0</b></button>
+      </div>
+
+      <div class="answer-mode" role="group" aria-label="选择答题方式">
+        <span>答题方式</span>
+        <button class="active" data-answer-mode="typing">⌨️ 键盘输入</button>
+        <button data-answer-mode="ordering">👆 点击排序</button>
+      </div>
+
+      <article class="exercise-card">
+        <div class="card-glow"></div>
+        <div class="card-meta"><span id="questionNo">第 1 题</span><div id="questionTags"></div></div>
+        <p id="chinesePrompt" class="prompt">正在准备题目…</p>
+        <div id="typingAnswer" class="answer-area">
+          <label for="answerInput">你的荷兰语</label>
+          <textarea id="answerInput" rows="3" autocomplete="off" spellcheck="false" placeholder="Typ hier je antwoord…"></textarea>
+        </div>
+        <div id="orderingAnswer" class="answer-area ordering-answer" hidden>
+          <label>点击单词，排出正确的荷兰语句子</label>
+          <div id="orderedWords" class="ordered-words" aria-live="polite"><span class="order-placeholder">答案会出现在这里</span></div>
+          <div id="wordBank" class="word-bank"></div>
+          <button id="clearOrderBtn" class="clear-order" type="button">↶ 全部重排</button>
+        </div>
+        <div id="feedback" class="feedback" hidden></div>
+        <div class="card-actions">
+          <button id="skipBtn" class="btn ghost">跳过</button>
+          <button id="submitBtn" class="btn primary">检查答案 <span>↵</span></button>
+          <button id="nextBtn" class="btn primary" hidden>下一句 <span>→</span></button>
+        </div>
+      </article>
+      <div class="xp-strip"><span>本次训练 XP</span><strong>+<b id="xpCount">0</b> XP</strong><small id="encouragement">每一次回忆，都在加深记忆。</small></div>
+      <div class="session-progress"><div><span>本轮进度</span><b id="sessionScore">0 / 10</b></div><progress id="sessionBar" max="10" value="0"></progress></div>
+    </section>
+
+    <section id="library" class="page">
+      <div class="page-title"><div><p class="eyebrow">句库</p><h1><span id="libraryTotal">0</span> 个核心句型</h1></div><p>按难度、话题和来源筛选。句库数量和分类会根据你手动加入的内容自动更新。</p></div>
+      <div class="filters">
+        <select id="levelFilter" aria-label="难度"><option value="all">所有难度</option><option>A2</option><option>B1</option><option>B2</option></select>
+        <select id="topicFilter" aria-label="话题"><option value="all">所有话题</option></select>
+        <input id="searchInput" type="search" placeholder="搜索中文或荷兰语">
+      </div>
+      <div id="libraryStats" class="library-stats"></div>
+      <div id="sentenceList" class="sentence-list"></div>
+    </section>
+
+    <section id="report" class="page">
+      <div class="page-title"><div><p class="eyebrow">学习报告</p><h1>你正在一点点掌握它</h1></div><p id="reportSummary">完成一次练习后，这里会出现你的学习趋势。</p></div>
+      <div class="metric-grid">
+        <article><span>已练句子</span><strong id="studiedMetric">0</strong><small id="totalMetric">/ 0</small></article>
+        <article><span>累计作答</span><strong id="answerMetric">0</strong><small>次</small></article>
+        <article><span>正确率</span><strong id="accuracyMetric">—</strong></article>
+        <article><span>待复习</span><strong id="dueMetric">0</strong><small>句</small></article>
+      </div>
+      <div class="report-grid">
+        <article class="panel"><h2>各等级掌握度</h2><div id="masteryBars"></div></article>
+        <article class="panel"><h2>最近 7 天</h2><div id="weekChart" class="week-chart"></div></article>
+      </div>
+      <article class="panel topics-panel"><h2>话题掌握情况</h2><div id="topicReport"></div></article>
+    </section>
+  </main>
+  <footer>荷写 · 每天十句，慢慢把荷兰语写进生活里。</footer>
+  <script src="my-sentences.js?v=20260720-2"></script>
+  <script src="sentences.js?v=20260720-2"></script>
+  <script src="app.js?v=20260720-3"></script>
+</body>
+</html>
